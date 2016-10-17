@@ -1,0 +1,52 @@
+****************************************
+vCard联系人解析 结构分析
+****************************************
+
+1.联系人集VCardCollection
+
+2.总的VCard的接口
+
+3. 2.1版本的vCard   VCard2_1
+
+
+由VCardCollection 接收一个 filename 来处理vcf类型文件
+针对文件中的每一行 由VCardCollection来判断开始和结束，验证BEGIN END 和 VERSION
+针对Version来判断使用某一类型的VCard
+
+分行等信息由Vcard自行处理
+
+Vcard需要进行的操作
+1.将一整行内容输入，然后由其内部处理
+2.取出其中的部分信息，按照类型获取
+3.判断某一个类型中信息是否存在
+4.获取版本信息
+
+VCard
+$version
+$message
+
+abstract function execute(String $string);
+function _QUOTED-PRINTABLE解码。
+
+VCardInterface
+function setMessage(String $string);
+function getMessage(String $field);
+function isValid(String $field);
+function getVersion();
+function getField();//判断当前Vcard信息中有哪些field类型
+
+Vcard中的信息怎么组成
+$message['类型'] = array(){ type:array() + value:array() + encoding:string}
+其余参数处理掉了
+
+关系 Vcard 实现接口  VCard2_1继承VCard
+
+VCard2_1
+private $isEnd;
+private $param
+private $value
+private $last
+private function setParam(String $string)
+private function getParam($String);
+private function setValue();
+private function addLast();

@@ -1,0 +1,36 @@
+*******************************
+vCard格式联系人解析
+author：游玩的兔子
+*******************************
+
+1.目前仅支持vCard2.1格式的联系人文件解析
+
+2.每一个联系人信息都存储在一个VCard对象中,VCardCollection是.vcf文件中多个联系人的集合。其实现Iterator接口，可直接使用foreach循环遍历
+其构造函数中传递参数为.vcf文件的路径
+
+3.若要支持新的vCard格式的解析只需要继承VCard类，如version3.0可创建VCard3_0
+在其中实现_execute方法即可，该方法用于处理输入的单行VCard内容，并将其解析，存入当前对象中。
+
+4.当前VCard2_1中存储数据与$_message中，信息存储方式为array(){$field=>$value} 其中$field为VCard中的字段如TEL，N，FN等，可使用getField()查看当前对象中存在哪些字段信息。而其中的$value为一个array()内容如下。因为同一种字段信息可能有多个组成，如同一个人可能有多个电话号。而每一条信息都分为encoding编码，type类型，value值组成。而value为一个数组，因为像ADR，N等在一条信息中值由多个部分组成。
+Array
+(
+    [0] => Array
+        (
+            [encoding] => 
+            [type] => Array
+                (
+                    [0] => CELL
+                    [1] => PREF
+                )
+
+            [value] => Array
+                (
+                    [0] => 12345678978
+                )
+
+        )
+)
+
+5.大致使用方式如下
+$vCardCollection = new VCardCollection('save_contact(2).vcf');
+print_r($vCardCollection->current()->getMessage('TEL'));
